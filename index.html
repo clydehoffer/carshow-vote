@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cal State LA Car Show — Vote</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #FFCE00;
+  --gold2: #e6b800;
+  --black: #0a0a0a;
+  --dark: #111;
+  --dark2: #1a1a1a;
+  --dark3: #222;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f0;
+  --text2: #888;
+  --text3: #444;
+  --green: #30d158;
+  --track-bg: #161616;
+  --asphalt: #1c1c1c;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--dark);
+  border-bottom: 3px solid var(--gold);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-flag {
+  font-size: 22px;
+}
+
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: var(--text2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.header-date {
+  font-size: 12px;
+  color: var(--text2);
+  text-align: right;
+}
+
+/* ── Category tabs ── */
+.tabs-wrap {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 64px;
+  z-index: 99;
+}
+.tabs-wrap::-webkit-scrollbar { display: none; }
+
+.tabs {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 2px;
+}
+
+.tab {
+  padding: 14px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── Main content ── */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ── Category view ── */
+.category-view { display: none; }
+.category-view.active { display: block; }
+
+.category-header {
+  margin-bottom: 28px;
+}
+
+.category-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.category-meta {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.category-meta span {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── Race track ── */
+.race-track {
+  background: var(--track-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.track-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.track-header .th-bar { text-align: left; padding-left: 4px; }
+.track-header .th-votes { text-align: right; }
+
+/* ── Car lane ── */
+.car-lane {
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: background 0.15s;
+}
+
+.car-lane:last-child { border-bottom: none; }
+.car-lane:hover { background: rgba(255,255,255,0.02); }
+
+.lane-inner {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.lane-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--text3);
+  text-align: center;
+  line-height: 1;
+}
+
+.lane-rank.gold { color: var(--gold); }
+.lane-rank.silver { color: #c0c0c0; }
+.lane-rank.bronze { color: #cd7f32; }
+
+.lane-info {}
+
+.lane-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.lane-vehicle {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 1px;
+}
+
+.lane-vote-btn {
+  background: var(--dark3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lane-vote-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+
+.lane-vote-btn.voted {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+}
+
+.lane-vote-btn.voted:hover {
+  background: var(--gold2);
+  transform: scale(1);
+}
+
+.vote-count {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.vote-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ── Race bar ── */
+.race-bar-wrap {
+  position: relative;
+  height: 28px;
+  background: var(--asphalt);
+  border-radius: 6px;
+  overflow: visible;
+  margin-left: 52px;
+  margin-right: 92px;
+}
+
+/* Road markings */
+.race-bar-wrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255,255,255,0.08) 0px,
+    rgba(255,255,255,0.08) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+  transform: translateY(-50%);
+}
+
+/* Finish line */
+.race-bar-wrap::after {
+  content: '🏁';
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.race-bar {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold2), var(--gold));
+  transition: width 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+  position: relative;
+  min-width: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* Car emoji on the bar */
+.race-car {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255,206,0,0.5));
+  transition: right 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+  pointer-events: none;
+}
+
+/* ── Empty state ── */
+.empty-category {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text3);
+}
+
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; }
+
+/* ── Vote toast ── */
+#vote-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--gold);
+  color: var(--black);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 100px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 999;
+  white-space: nowrap;
+  pointer-events: none;
+}
+#vote-toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Pulse animation on vote ── */
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,206,0,0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(255,206,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,206,0,0); }
+}
+.pulse { animation: pulse 0.5s ease; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .category-title { font-size: 36px; }
+  .race-bar-wrap { margin-left: 48px; margin-right: 80px; }
+  .lane-vote-btn { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-flag">🏁</div>
+      <div>
+        <div class="logo-text">Cal State LA Car Show</div>
+        <div class="logo-sub">People's Vote · April 25, 2025</div>
+      </div>
+    </div>
+    <div class="header-date">
+      <div style="font-size:13px;font-weight:600;color:var(--text)">Lot 5</div>
+      <div>10:00 AM – 5:00 PM</div>
+    </div>
+  </div>
+</header>
+
+<!-- Category tabs -->
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<!-- Main -->
+<main class="main" id="main"></main>
+
+<!-- Toast -->
+<div id="vote-toast">🏆 Vote counted!</div>
+
+<script src="categories.js"></script>
+<script>
+
+// ── State ─────────────────────────────────────────────────────────────────────
+// votes[categoryId][carId] = count
+// voted[categoryId][carId] = true/false (this device)
+let votes  = JSON.parse(localStorage.getItem("cs_votes")  || "{}");
+let voted  = JSON.parse(localStorage.getItem("cs_voted")  || "{}");
+let activeTab = CATEGORIES[0].id;
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function init() {
+  // Ensure vote objects exist for all categories/cars
+  CATEGORIES.forEach(cat => {
+    if (!votes[cat.id])  votes[cat.id]  = {};
+    if (!voted[cat.id])  voted[cat.id]  = {};
+    cat.cars.forEach(car => {
+      if (!votes[cat.id][car.id]) votes[cat.id][car.id] = 0;
+    });
+  });
+
+  renderTabs();
+  renderAll();
+  setTab(activeTab);
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function renderTabs() {
+  const container = document.getElementById("tabs");
+  container.innerHTML = CATEGORIES.map(cat => `
+    <div class="tab" id="tab-${cat.id}" onclick="setTab('${cat.id}')">
+      ${cat.name}
+    </div>
+  `).join("");
+}
+
+function setTab(id) {
+  activeTab = id;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".category-view").forEach(v => v.classList.remove("active"));
+  const tab = document.getElementById(`tab-${id}`);
+  const view = document.getElementById(`view-${id}`);
+  if (tab)  tab.classList.add("active");
+  if (view) view.classList.add("active");
+
+  // Scroll tab into view on mobile
+  if (tab) tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+}
+
+// ── Render all categories ─────────────────────────────────────────────────────
+function renderAll() {
+  const main = document.getElementById("main");
+  main.innerHTML = CATEGORIES.map(cat => renderCategory(cat)).join("");
+}
+
+function renderCategory(cat) {
+  const sorted = [...cat.cars].sort((a, b) =>
+    (votes[cat.id][b.id] || 0) - (votes[cat.id][a.id] || 0)
+  );
+  const maxVotes = Math.max(1, ...sorted.map(c => votes[cat.id][c.id] || 0));
+  const totalVotes = sorted.reduce((s, c) => s + (votes[cat.id][c.id] || 0), 0);
+
+  const carsHTML = sorted.length === 0
+    ? `<div class="empty-category">
+        <div class="empty-icon">🚗</div>
+        <div class="empty-title">No cars assigned yet</div>
+        <div class="empty-sub">Cars will appear here once assigned in the dashboard</div>
+       </div>`
+    : sorted.map((car, i) => renderLane(cat, car, i, maxVotes)).join("");
+
+  return `
+    <div class="category-view" id="view-${cat.id}">
+      <div class="category-header">
+        <div class="category-title">${cat.name}${cat.subtitle ? ` <span style="color:var(--text2);font-size:0.6em">${cat.subtitle}</span>` : ""}</div>
+        <div class="category-meta">${sorted.length} cars · <span>${totalVotes}</span> total votes</div>
+      </div>
+      <div class="race-track">
+        <div class="track-header">
+          <div>#</div>
+          <div class="th-bar">Race position</div>
+          <div class="th-votes">Votes</div>
+        </div>
+        ${carsHTML}
+      </div>
+    </div>
+  `;
+}
+
+function renderLane(cat, car, index, maxVotes) {
+  const voteCount  = votes[cat.id][car.id] || 0;
+  const hasVoted   = voted[cat.id][car.id] || false;
+  const pct        = maxVotes > 0 ? Math.max(4, Math.round((voteCount / maxVotes) * 94)) : 4;
+  const rankClass  = index === 0 ? "gold" : index === 1 ? "silver" : index === 2 ? "bronze" : "";
+  const rankSymbol = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : index + 1;
+
+  // Rotate through car emojis based on car id hash
+  const carEmojis = ["🏎️","🚗","🚙","🚕","🛻","🚓","🚑","🚐"];
+  const emojiIdx  = car.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % carEmojis.length;
+  const carEmoji  = carEmojis[emojiIdx];
+
+  return `
+    <div class="car-lane" id="lane-${cat.id}-${car.id}">
+      <div class="lane-inner">
+        <div class="lane-rank ${rankClass}">${rankSymbol}</div>
+        <div class="lane-info">
+          <div class="lane-name">${car.name || "—"}</div>
+          <div class="lane-vehicle">${car.vehicle || ""}</div>
+        </div>
+        <button class="lane-vote-btn ${hasVoted ? "voted" : ""}"
+                onclick="castVote('${cat.id}', '${car.id}', '${cat.name}', '${car.name}')"
+                id="votebtn-${cat.id}-${car.id}">
+          <span class="vote-count">${hasVoted ? "✓" : voteCount}</span>
+          <span class="vote-label">${hasVoted ? "Voted" : "Vote"}</span>
+        </button>
+      </div>
+      <div class="race-bar-wrap">
+        <div class="race-bar" id="bar-${cat.id}-${car.id}" style="width:${pct}%">
+          <span class="race-car">${carEmoji}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Vote ──────────────────────────────────────────────────────────────────────
+function castVote(catId, carId, catName, carName) {
+  if (voted[catId][carId]) return; // already voted for this car
+
+  // Record vote
+  votes[catId][carId] = (votes[catId][carId] || 0) + 1;
+  voted[catId][carId] = true;
+
+  // Persist
+  localStorage.setItem("cs_votes",  JSON.stringify(votes));
+  localStorage.setItem("cs_voted",  JSON.stringify(voted));
+
+  // Re-render this category
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if (!cat) return;
+
+  const view = document.getElementById(`view-${catId}`);
+  if (view) {
+    view.outerHTML = renderCategory(cat);
+    document.getElementById(`view-${catId}`).classList.add("active");
+  }
+
+  // Toast
+  showToast(`🏆 Voted for ${carName}!`);
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("vote-toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
