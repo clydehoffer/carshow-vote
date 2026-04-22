@@ -380,18 +380,14 @@ function updateAll() {
       return;
     }
 
-    // Remove empty div
-    lane.innerHTML = cars.map((car, i) => {
-      const pct = Math.max(3, Math.round((car.votes / max) * 88));
-      // Gold for leader, dimmer for rest
-      const opacity = i === 0 ? "1" : i === 1 ? "0.65" : "0.4";
-      return `
-        <div class="car-track">
-          <div class="car-bar" style="width:${pct}%;opacity:${opacity}"></div>
-          <span class="car-icon" style="left:calc(${pct}% - 8px)">${CAR_SVG}</span>
-          <span class="driver-label" style="left:calc(${pct}% + 14px)">${car.name} &nbsp;${car.votes}</span>
-        </div>`;
-    }).join("");
+    // Show only the leader
+    const leader = cars[0];
+    lane.innerHTML = `
+      <div class="car-track">
+        <div class="car-bar" style="width:88%"></div>
+        <span class="car-icon" style="left:calc(88% - 8px)">${CAR_SVG}</span>
+        <span class="driver-label" style="left:calc(88% + 14px)">${leader.name} &nbsp;${leader.votes} vote${leader.votes !== 1 ? "s" : ""}</span>
+      </div>`;
   });
 }
 
