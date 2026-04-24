@@ -332,6 +332,11 @@ html, body {
 
 <script src="categories.js"></script>
 <script>
+// Redirect to survey if not yet completed
+if (!localStorage.getItem("survey_done")) {
+  window.location.href = "https://clydehoffer.github.io/carshow-checkin/survey.html";
+}
+
 const VOTES_API = "https://script.google.com/macros/s/AKfycbyubbrgZS0i23l1zyL7lKn4O5KjBW8bnfRG2EpQrp97PYtAdG6LkkBDqaryD1HrAAlH/exec";
 const POLL_MS   = 10000;
 
